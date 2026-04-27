@@ -197,30 +197,40 @@ function initMap() {
     startGPS();
 }
 
+function handlePositionUpdate(position) {
+    const acc = position.coords.accuracy; userCurrentPos = [position.coords.latitude, position.coords.longitude];
+    STATUS_EL.innerText = `GPS aktyvus. Paklaida: ±${Math.round(acc)}m`;
+    if (!userMarker) {
+        accuracyCircle = L.circle(userCurrentPos, { radius: acc, color: '#3b82f6', weight: 1, opacity: 0.3, fillColor: '#3b82f6', fillOpacity: 0.1 }).addTo(map);
+        userMarker = L.circleMarker(userCurrentPos, { color: '#ffffff', fillColor: '#3b82f6', fillOpacity: 1, radius: 8, weight: 2 }).addTo(map);
+        map.setView(userCurrentPos, 18);
+    } else { userMarker.setLatLng(userCurrentPos); accuracyCircle.setLatLng(userCurrentPos); accuracyCircle.setRadius(acc); }
+}
+
+function handleGPSError(error) {
+    if (error.code === 1) {
+        STATUS_EL.innerText = "GPS blokavimas naršyklėje. Prašome nustatymuose leisti.";
+    } else if (error.code === 3) {
+        STATUS_EL.innerText = "GPS ilgai nerandamas (Timeout). Laukiama toliau...";
+    } else {
+        STATUS_EL.innerText = `GPS klaida: ${error.message}`;
+    }
+}
+
 function startGPS() {
     if (!("geolocation" in navigator)) { STATUS_EL.innerText = "GPS nepalaikomas."; return; }
-    STATUS_EL.innerText = "Ieškoma GPS signalo...";
-    navigator.geolocation.watchPosition(
-        (position) => {
-            const acc = position.coords.accuracy; userCurrentPos = [position.coords.latitude, position.coords.longitude];
-            STATUS_EL.innerText = `GPS aktyvus. Paklaida: ±${Math.round(acc)}m`;
-            if (!userMarker) {
-                accuracyCircle = L.circle(userCurrentPos, { radius: acc, color: '#3b82f6', weight: 1, opacity: 0.3, fillColor: '#3b82f6', fillOpacity: 0.1 }).addTo(map);
-                userMarker = L.circleMarker(userCurrentPos, { color: '#ffffff', fillColor: '#3b82f6', fillOpacity: 1, radius: 8, weight: 2 }).addTo(map);
-                map.setView(userCurrentPos, 18);
-            } else { userMarker.setLatLng(userCurrentPos); accuracyCircle.setLatLng(userCurrentPos); accuracyCircle.setRadius(acc); }
-        },
-        (error) => {
-            if (error.code === error.PERMISSION_DENIED) {
-                STATUS_EL.innerText = "GPS uždraustas naršyklės. Prašome suteikti leidimą.";
-            } else if (error.code === error.TIMEOUT) {
-                STATUS_EL.innerText = "GPS ilgai nerandamas. Išeikite į atvirą lauką.";
-            } else {
-                STATUS_EL.innerText = `GPS klaida: ${error.message}`;
-            }
-        },
-        { enableHighAccuracy: false, maximumAge: 10000, timeout: 30000 }
-    );
+    STATUS_EL.innerText = "Ieškoma GPS signalo (gali trukti iki 1 min)...";
+
+    const options = { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 };
+
+    navigator.geolocation.getCurrentPosition(handlePositionUpdate, handleGPSError, options);
+    navigator.geolocation.watchPosition(handlePositionUpdate, handleGPSError, options);
+
+    setInterval(() => {
+        if (!userCurrentPos || STATUS_EL.innerText.includes("ilgai")) {
+            navigator.geolocation.getCurrentPosition(handlePositionUpdate, handleGPSError, options);
+        }
+    }, 15000);
 }
 
 function calculateAndDrawRoute() {
