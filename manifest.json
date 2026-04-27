@@ -1,0 +1,15 @@
+{
+  "name": "Akmenų Žymeklis",
+  "short_name": "AgroAkmuo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f0f0f0",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

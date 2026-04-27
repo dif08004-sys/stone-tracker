@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="lt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Akmenų Žymeklis</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+</head>
+
+<body>
+    <!-- Field Screen -->
+    <div id="field-screen">
+        <div class="field-container">
+            <h1 style="margin-bottom: 5px;">AgroAkmuo</h1>
+            <p style="color: #666; margin-bottom: 20px;">Pasirinkite arba sukurkite lauką</p>
+
+            <div class="new-field-box">
+                <input type="text" id="new-field-input" placeholder="Naujo lauko pavadinimas">
+                <button id="add-field-btn" class="action-btn">Sukurti</button>
+            </div>
+
+            <h2 style="font-size: 1.2rem; margin-top: 15px; margin-bottom: 5px;">Esami laukai:</h2>
+            <div id="fields-list"></div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="app-container" style="display: none;">
+        <div id="top-bar">
+            <button id="back-to-fields" class="action-btn" style="flex: 0; padding: 10px 15px;">&#8592; Atgal</button>
+            <span id="current-field-name"></span>
+        </div>
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+        <div id="controls-container">
+            <h2 id="status-text">Ieškoma GPS signalo...</h2>
+            <div class="buttons-grid">
+                <button class="mark-btn btn-huge" data-size="very-large">Labai didelis</button>
+                <button class="mark-btn btn-large" data-size="large">Didelis</button>
+                <button class="mark-btn btn-medium" data-size="medium">Vidutinis</button>
+            </div>
+            <div class="actions-grid">
+                <button id="share-btn" class="action-btn">Dalintis</button>
+                <button id="route-btn" class="action-btn">Maršrutas</button>
+                <button id="clear-btn" class="action-btn btn-danger">Trinti lauką</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

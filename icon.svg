@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#3b82f6" rx="100"/>
+  <circle cx="256" cy="270" r="140" fill="white" />
+  <circle cx="230" cy="240" r="60" fill="#f97316" />
+  <circle cx="300" cy="300" r="80" fill="#dc2626" />
+  <circle cx="280" cy="180" r="40" fill="#eab308" />
+  <text x="50%" y="80" font-family="sans-serif" font-weight="bold" font-size="60" fill="white" text-anchor="middle">AgroAkmuo</text>
+</svg>
