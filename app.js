@@ -25,6 +25,10 @@ let stoneMarkers = [];
 let routePolyline;
 let userCurrentPos = null;
 
+let googleSat = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 20, attribution: 'Google' });
+let googleMap = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20, attribution: 'Google' });
+let isSatellite = true;
+
 const STATUS_EL = document.getElementById('status-text');
 
 const STONE_COLORS = { 'very-large': '#dc2626', 'large': '#f97316', 'medium': '#eab308' };
@@ -176,24 +180,42 @@ function attachGlobalListeners() {
         const controls = document.getElementById('controls-container');
         if (controls.style.display === 'none') {
             controls.style.display = 'flex';
-            e.target.innerText = 'Paslėpti';
+            e.target.innerText = '⬇️ Paslėpti';
         } else {
             controls.style.display = 'none';
-            e.target.innerText = 'Žymėti';
+            e.target.innerText = '⬆️ Žymėti';
         }
         if (map) {
             setTimeout(() => map.invalidateSize(), 150);
+        }
+    });
+
+    document.getElementById('map-layer-btn').addEventListener('click', (e) => {
+        if (isSatellite) {
+            map.removeLayer(googleSat);
+            googleMap.addTo(map);
+            isSatellite = false;
+            e.target.innerText = '🛰️ Palydovas';
+        } else {
+            map.removeLayer(googleMap);
+            googleSat.addTo(map);
+            isSatellite = true;
+            e.target.innerText = '🗺️ Žemėlapis';
+        }
+    });
+
+    document.getElementById('recenter-btn').addEventListener('click', () => {
+        if (userCurrentPos && map) {
+            map.setView(userCurrentPos, 18);
+        } else {
+            alert("Palaukite, jūsų lokacija dar ieškoma...");
         }
     });
 }
 
 function initMap() {
     map = L.map('map', { zoomControl: false }).setView([55.1694, 23.8813], 7);
-    // Palydovinė nuotrauka naudojant Esri World Imagery
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 20,
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }).addTo(map);
+    googleSat.addTo(map); // Default is Google Maps Satellite!
     startGPS();
 }
 
