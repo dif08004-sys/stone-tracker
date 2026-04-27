@@ -192,7 +192,14 @@ function startGPS() {
                 map.setView(userCurrentPos, 18);
             } else { userMarker.setLatLng(userCurrentPos); accuracyCircle.setLatLng(userCurrentPos); accuracyCircle.setRadius(acc); }
         },
-        (error) => { STATUS_EL.innerText = `GPS klaida: ${error.message}`; }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+        (error) => {
+            if (error.code === error.TIMEOUT) {
+                STATUS_EL.innerText = "GPS ilgai nerandamas. Išeikite į atvirą lauką.";
+            } else {
+                STATUS_EL.innerText = `GPS klaida: ${error.message}`;
+            }
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
     );
 }
 
