@@ -104,6 +104,27 @@ function openField(fieldName) {
     document.getElementById('app-container').style.display = 'flex';
     if (!map) { initMap(); } else { setTimeout(() => map.invalidateSize(), 100); }
     renderCurrentFieldStones();
+
+    setTimeout(focusOnStones, 300);
+}
+
+function focusOnStones() {
+    if (!currentField || !map) return;
+    const rawStones = appData[currentField];
+    const stones = Array.isArray(rawStones) ? rawStones : Object.values(rawStones || {});
+    if (stones.length === 0) return;
+
+    if (stones.length === 1) {
+        map.setView([stones[0].lat, stones[0].lng], 18);
+    } else {
+        const latitudes = stones.map(s => s.lat);
+        const longitudes = stones.map(s => s.lng);
+        const bounds = [
+            [Math.min(...latitudes), Math.min(...longitudes)],
+            [Math.max(...latitudes), Math.max(...longitudes)]
+        ];
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
 }
 
 function renderCurrentFieldStones() {
@@ -201,6 +222,16 @@ function attachGlobalListeners() {
             googleSat.addTo(map);
             isSatellite = true;
             e.target.innerText = '🗺️';
+        }
+    });
+
+    document.getElementById('focus-stones-btn').addEventListener('click', () => {
+        const rawStones = appData[currentField];
+        const stones = Array.isArray(rawStones) ? rawStones : Object.values(rawStones || {});
+        if (stones && stones.length > 0) {
+            focusOnStones();
+        } else {
+            alert("Šiame lauke dar nėra pažymėtų akmenų.");
         }
     });
 
