@@ -180,10 +180,10 @@ function attachGlobalListeners() {
         const controls = document.getElementById('controls-container');
         if (controls.style.display === 'none') {
             controls.style.display = 'flex';
-            e.target.innerText = '⬇️ Paslėpti';
+            e.target.innerText = '⬇️';
         } else {
             controls.style.display = 'none';
-            e.target.innerText = '⬆️ Žymėti';
+            e.target.innerText = '⬆️';
         }
         if (map) {
             setTimeout(() => map.invalidateSize(), 150);
@@ -195,12 +195,12 @@ function attachGlobalListeners() {
             map.removeLayer(googleSat);
             googleMap.addTo(map);
             isSatellite = false;
-            e.target.innerText = '🛰️ Palydovas';
+            e.target.innerText = '🛰️';
         } else {
             map.removeLayer(googleMap);
             googleSat.addTo(map);
             isSatellite = true;
-            e.target.innerText = '🗺️ Žemėlapis';
+            e.target.innerText = '🗺️';
         }
     });
 

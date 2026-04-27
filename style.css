@@ -123,13 +123,17 @@ html {
 
 .floating-btn {
     background: rgba(255, 255, 255, 0.95);
-    padding: 10px 16px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #ccc;
-    font-weight: 600;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 1.25rem;
     transition: background 0.2s;
 }
 
