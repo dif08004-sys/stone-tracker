@@ -171,11 +171,29 @@ function attachGlobalListeners() {
     });
 
     document.getElementById('route-btn').addEventListener('click', calculateAndDrawRoute);
+
+    document.getElementById('toggle-controls-btn').addEventListener('click', (e) => {
+        const controls = document.getElementById('controls-container');
+        if (controls.style.display === 'none') {
+            controls.style.display = 'flex';
+            e.target.innerText = 'Paslėpti';
+        } else {
+            controls.style.display = 'none';
+            e.target.innerText = 'Žymėti';
+        }
+        if (map) {
+            setTimeout(() => map.invalidateSize(), 150);
+        }
+    });
 }
 
 function initMap() {
     map = L.map('map', { zoomControl: false }).setView([55.1694, 23.8813], 7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: 'OSM' }).addTo(map);
+    // Palydovinė nuotrauka naudojant Esri World Imagery
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 20,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }).addTo(map);
     startGPS();
 }
 
@@ -193,13 +211,15 @@ function startGPS() {
             } else { userMarker.setLatLng(userCurrentPos); accuracyCircle.setLatLng(userCurrentPos); accuracyCircle.setRadius(acc); }
         },
         (error) => {
-            if (error.code === error.TIMEOUT) {
+            if (error.code === error.PERMISSION_DENIED) {
+                STATUS_EL.innerText = "GPS uždraustas naršyklės. Prašome suteikti leidimą.";
+            } else if (error.code === error.TIMEOUT) {
                 STATUS_EL.innerText = "GPS ilgai nerandamas. Išeikite į atvirą lauką.";
             } else {
                 STATUS_EL.innerText = `GPS klaida: ${error.message}`;
             }
         },
-        { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+        { enableHighAccuracy: false, maximumAge: 10000, timeout: 30000 }
     );
 }
 

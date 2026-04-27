@@ -110,6 +110,21 @@ html {
     height: 100%;
 }
 
+.floating-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
 #controls-container {
     background: #ffffff;
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
