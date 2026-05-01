@@ -58,7 +58,11 @@ function loadAppData() {
 
 function saveAppData() {
     if (db) {
-        db.ref('appData').set(appData);
+        if (Object.keys(appData).length === 0) {
+            db.ref('appData').remove();
+        } else {
+            db.ref('appData').set(appData);
+        }
     } else {
         localStorage.setItem('appData', JSON.stringify(appData));
     }
@@ -179,7 +183,14 @@ function attachGlobalListeners() {
     document.getElementById('clear-btn').addEventListener('click', () => {
         if (!currentField) return;
         if (confirm(`Ar tikrai norite ištrinti lauką "${currentField}"?`)) {
-            delete appData[currentField]; saveAppData(); document.getElementById('back-to-fields').click();
+            const fieldToRemove = currentField;
+            document.getElementById('back-to-fields').click();
+            delete appData[fieldToRemove];
+            if (db) {
+                db.ref('appData').child(fieldToRemove).remove().catch(console.error);
+            } else {
+                saveAppData();
+            }
         }
     });
 
